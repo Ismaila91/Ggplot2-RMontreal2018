@@ -118,3 +118,33 @@ y1 = runif(n1, -3, 3)
 z1 = x^3 + y^3 +5*rnorm(n1)
 xy.list = trans3d(x1, y1, z1, persp.mat)
 points(xy.list, pch=20)
+
+## Color palettes
+n = 50
+plot(0, 0, type="n", xlim=c(1,n), ylim=c(1,6))
+points(1:n, rep(6,n), col=gray.colors(n), pch=19)
+points(1:n, rep(5,n), col=rainbow(n), pch=19)
+points(1:n, rep(4,n), col=heat.colors(n), pch=19)
+points(1:n, rep(3,n), col=terrain.colors(n), pch=19)
+points(1:n, rep(2,n), col=topo.colors(n), pch=19)
+points(1:n, rep(1,n), col=cm.colors(n), pch=19)
+## Creating a custom color palette
+cust.colors = colorRampPalette(c("red","purple","darkgreen"))
+plot(1:n, rep(1,n), col=cust.colors(n), pch=19)
+## Coloring points by value
+get.col.from.val = function(val, lim, col.vec) {
+  col.vec[(val-lim[1])/(lim[2]-lim[1]) * (length(col.vec)-1)+1]
+}
+col.vec = heat.colors(30)
+lim = c(-1, 1)
+theta = seq(0, 6*pi, length=200)
+plot(theta, sin(theta), type="o", pch=19,
+     col=get.col.from.val(sin(theta), lim, col.vec))
+
+persp.mat = surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
+                    theta=25, phi=15, col=rgb(1,1,1,alpha=0.2),
+                    ticktype="detailed", mar=c(2,2,2,2))
+col.vec = terrain.colors(30)
+lim = c(min(z1),max(z1))
+xy.list = trans3d(x1, y1, z1, persp.mat)
+points(xy.list, pch=20, col=get.col.from.val(z1, lim, col.vec))
